@@ -1,5 +1,6 @@
 # Auto-Wordle
 **NOTE:** *I DO NOT condone or recommend the use of this program in actual wordle, it was only an experiment by myself for some fun!*
+
 Demo: https://ezkidtrix.github.io/Auto-Wordle/
 
 A p5.js program that auto solves a wordle game by using a list of all valid wordle words list by Dracos on GitHub (https://gist.github.com/dracos/dd0668f281e685bad51479e5acaadb93).
