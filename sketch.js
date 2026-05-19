@@ -36,6 +36,7 @@ async function elements() {
     
     if (k === "r") reset();
     if (k === "escape") {
+      if (possible.length === 1) return;
       possible.splice(possible.indexOf(currGuess), 1);
       
       findBest(words, possible, best => {
