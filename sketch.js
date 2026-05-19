@@ -2,23 +2,45 @@
 let input, submitBtn, resetBtn, statusDiv, words = [];
 let processing = false, currRound = 1, currGuess = "raise";
 
-async function setup() {
+function setup() {
   createCanvas(windowWidth, windowHeight);
+  elements();
+}
+
+function draw() {
+  background(75, 200, 125);
   
+  fill(255);
+  noStroke();
+  
+  rectMode("center");
+  rect(width / 2 + 2.5, height / 2, 220, 160, 20);
+}
+
+async function elements() {
   input = createInput("");
-  input.position(20, 20);
-  input.size(120);
   input.attribute("maxlength", "5");
+  input.attribute("placeholder", "(ex. gbyyb)");
+  input.size(165, 35);
+  input.position(width / 2 - input.width / 2, height / 2 - input.height / 2 - 55);
+  input.style("background", "white");
+  input.style("border", "2px solid rgb(0, 0, 0, 0.25)");
+  input.style("border-radius", "10px");
+  input.style("color", "black");
+  input.style("font-size", "20px");
+  input.style("font-family", "sans-serif");
+  input.style("text-align", "center");
   input.elt.addEventListener("keydown", e => {
     let k = e.key.toLowerCase();
     let validKeys = ["g", "y", "b", "backspace", "enter"];
     
+    if (k === "r") reset();
     if (k === "escape") {
       possible.splice(possible.indexOf(currGuess), 1);
       
       findBest(words, possible, best => {
         currGuess = best;
-        updateDisplay(`Round ${currRound}: try "${currGuess}" (${possible.length} words left)`);
+        updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
       });
     }
     
@@ -30,29 +52,53 @@ async function setup() {
   })
   
   submitBtn = createButton("Submit");
-  submitBtn.position(150, 20);
+  submitBtn.size(80, 35);
+  submitBtn.position(width / 2 - submitBtn.width / 2 - 45, height / 2 - submitBtn.height / 2 - 7.5);
+  submitBtn.style("overflow", "scroll");
+  submitBtn.style("background", "transparent");
+  submitBtn.style("border", "2px solid rgb(0, 0, 0, 0.2)");
+  submitBtn.style("border-radius", "10px");
+  submitBtn.style("color", "black");
+  submitBtn.style("font-size", "20px");
+  submitBtn.style("font-family", "sans-serif");
+  submitBtn.style("text-align", "center");
   submitBtn.mousePressed(processFeedback);
   
   resetBtn = createButton("Reset");
-  resetBtn.position(210, 20);
-  resetBtn.mousePressed(() => {
-    if (processing) return;
-    currGuess = "raise";
-    
-    input.value("");
-    startSolving();
-  })
+  resetBtn.size(80, 35);
+  resetBtn.position(width / 2 - resetBtn.width / 2 + 45, height / 2 - resetBtn.height / 2 - 7.5);
+  resetBtn.style("overflow", "scroll");
+  resetBtn.style("background", "transparent");
+  resetBtn.style("border", "2px solid rgb(0, 0, 0, 0.2)");
+  resetBtn.style("border-radius", "10px");
+  resetBtn.style("color", "black");
+  resetBtn.style("font-size", "20px");
+  resetBtn.style("font-family", "sans-serif");
+  resetBtn.style("text-align", "center");
+  resetBtn.mousePressed(reset);
   
   statusDiv = createDiv("");
-  statusDiv.position(20, 60);
-  statusDiv.style("font-family", "monospace");
+  statusDiv.size(200, 50);
+  statusDiv.position(width / 2 - statusDiv.width / 2, height / 2 - statusDiv.height / 2 + 40);
+  statusDiv.style("overflow", "scroll");
+  statusDiv.style("background", "transparent");
+  statusDiv.style("border", "2px solid rgb(0, 0, 0, 0.2)");
+  statusDiv.style("border-radius", "10px");
+  statusDiv.style("color", "black");
+  statusDiv.style("font-size", "20px");
+  statusDiv.style("font-family", "sans-serif");
+  statusDiv.style("text-align", "center");
   
   words = await getWords();
   startSolving();
 }
 
-function draw() {
-  background(220);
+function reset() {
+  if (processing) return;
+  currGuess = "raise";
+
+  input.value("");
+  startSolving();
 }
 
 function startSolving() {
@@ -61,7 +107,7 @@ function startSolving() {
   updateDisplay(`Initializing...`);
   possible = structuredClone(words);
   
-  updateDisplay(`Round ${currRound}: try "${currGuess}" (${possible.length} words left)`);
+  updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
 }
 
 function findBest(guesses, possible, callback) {
@@ -177,7 +223,7 @@ function processFeedback() {
   
   findBest(words, possible, best => {
     currGuess = best;
-    updateDisplay(`Round ${currRound}: try "${currGuess}" (${possible.length} words left)`);
+    updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
   });
 }
 
