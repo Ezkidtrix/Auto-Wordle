@@ -105,7 +105,7 @@ function startSolving() {
   currRound = 1;
   
   updateDisplay(`Initializing...`);
-  possible = structuredClone(words);
+  possible = [...words];
   
   updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
 }
