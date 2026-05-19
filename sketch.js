@@ -54,7 +54,7 @@ async function elements() {
   submitBtn = createButton("Submit");
   submitBtn.size(80, 35);
   submitBtn.position(width / 2 - submitBtn.width / 2 - 45, height / 2 - submitBtn.height / 2 - 7.5);
-  submitBtn.style("overflow", "scroll");
+  submitBtn.style("overflow", "hidden");
   submitBtn.style("background", "transparent");
   submitBtn.style("border", "2px solid rgb(0, 0, 0, 0.2)");
   submitBtn.style("border-radius", "10px");
@@ -67,7 +67,7 @@ async function elements() {
   resetBtn = createButton("Reset");
   resetBtn.size(80, 35);
   resetBtn.position(width / 2 - resetBtn.width / 2 + 45, height / 2 - resetBtn.height / 2 - 7.5);
-  resetBtn.style("overflow", "scroll");
+  resetBtn.style("overflow", "hidden");
   resetBtn.style("background", "transparent");
   resetBtn.style("border", "2px solid rgb(0, 0, 0, 0.2)");
   resetBtn.style("border-radius", "10px");
@@ -80,7 +80,7 @@ async function elements() {
   statusDiv = createDiv("");
   statusDiv.size(200, 50);
   statusDiv.position(width / 2 - statusDiv.width / 2, height / 2 - statusDiv.height / 2 + 40);
-  statusDiv.style("overflow", "scroll");
+  statusDiv.style("overflow", "hidden");
   statusDiv.style("background", "transparent");
   statusDiv.style("border", "2px solid rgb(0, 0, 0, 0.2)");
   statusDiv.style("border-radius", "10px");
