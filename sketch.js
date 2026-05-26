@@ -118,14 +118,14 @@ function findBest(guesses, possible, callback) {
   let bestEnt = -1;
   
   let index = 0;
-  let batchSize = 5;
+  let batchSize = 25;
   
   function process() {
     let end = min(index + batchSize, possible.length);
     updateDisplay(`Computing best guess... (${index}/${possible.length})`);
     
     for (; index < end; index++) {
-      let ent = getEntropy(words[index], possible);
+      let ent = getEntropy(possible[index], possible);
     
       if (ent > bestEnt) {
         bestEnt = ent;
