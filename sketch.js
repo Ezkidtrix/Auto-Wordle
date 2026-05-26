@@ -1,6 +1,6 @@
 // noprotect
-let input, submitBtn, resetBtn, statusDiv, words = [];
 let processing = false, currRound = 1, currGuess = "raise";
+let input, submitBtn, resetBtn, statusDiv, possible = [], words = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -125,11 +125,12 @@ function findBest(guesses, possible, callback) {
     updateDisplay(`Computing best guess... (${index}/${possible.length})`);
     
     for (; index < end; index++) {
-      let ent = getEntropy(possible[index], possible);
+      let guess = possible[index];
+      let ent = getEntropy(guess, possible);
     
       if (ent > bestEnt) {
         bestEnt = ent;
-        bestWord = possible[index];
+        bestWord = guess;
       }
     }
   
