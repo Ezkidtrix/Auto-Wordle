@@ -1,6 +1,6 @@
 // noprotect
-let processing = false, currRound = 1, currGuess = "raise";
-let input, submitBtn, resetBtn, statusDiv, possible = [], words = [];
+let input, submitBtn, resetBtn, statusDiv, guesses = [], words = [];
+let originWords = [], processing = false, currRound = 1, currGuess = "raise";
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -31,12 +31,17 @@ async function elements() {
   input.style("font-family", "sans-serif");
   input.style("text-align", "center");
   input.elt.addEventListener("keydown", e => {
+    if (processing) return;
+    
     let k = e.key.toLowerCase();
     let validKeys = ["g", "y", "b", "backspace", "enter"];
     
     if (k === "r") reset();
     if (k === "escape") {
       if (possible.length === 1) return;
+      words.splice(words.indexOf(currGuess), 1);
+      
+      guesses.splice(guesses.indexOf(currGuess), 1);
       possible.splice(possible.indexOf(currGuess), 1);
       
       findBest(words, possible, best => {
@@ -86,17 +91,21 @@ async function elements() {
   statusDiv.style("border", "2px solid rgb(0, 0, 0, 0.2)");
   statusDiv.style("border-radius", "10px");
   statusDiv.style("color", "black");
-  statusDiv.style("font-size", "20px");
+  statusDiv.style("font-size", "19px");
   statusDiv.style("font-family", "sans-serif");
   statusDiv.style("text-align", "center");
   
-  words = await getWords();
+  originWords = await getWords();
+  words = [...originWords];
+  
   startSolving();
 }
 
 function reset() {
   if (processing) return;
+  
   currGuess = "raise";
+  words = [...originWords];
 
   input.value("");
   startSolving();
@@ -104,8 +113,9 @@ function reset() {
 
 function startSolving() {
   currRound = 1;
-  
   updateDisplay(`Initializing...`);
+  
+  guesses = [...words];
   possible = [...words];
   
   updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
@@ -115,26 +125,40 @@ function findBest(guesses, possible, callback) {
   processing = true;
   
   let bestWord = "";
-  let bestEnt = -1;
+  let bestGraySize = Infinity, bestEnt = -1;
   
   let index = 0;
   let batchSize = 25;
   
   function process() {
-    let end = min(index + batchSize, possible.length);
-    updateDisplay(`Computing best guess... (${index}/${possible.length})`);
+    let end = min(index + batchSize, guesses.length);
+    updateDisplay(`Computing best guess... (${index}/${guesses.length})`);
     
     for (; index < end; index++) {
-      let guess = possible[index];
+      let guess = guesses[index];
       let ent = getEntropy(guess, possible);
-    
+      
       if (ent > bestEnt) {
         bestEnt = ent;
         bestWord = guess;
+        
+        bestGraySize = getAllGray(guess, possible);
+      } else if (ent === bestEnt) {
+        let currGraySize = getAllGray(guess, possible);
+        
+        if (currGraySize < bestGraySize) {
+          bestGraySize = currGraySize;
+          bestWord = guess;
+        } else if (currGraySize === bestGraySize) {
+          let newCand = possible.includes(guess);
+          let oldCand = possible.includes(bestWord);
+          
+          if (newCand && !oldCand) bestWord = guess;
+        }
       }
     }
   
-    if (index < possible.length) {
+    if (index < guesses.length) {
       requestAnimationFrame(process);
     } else {
       processing = false;
@@ -143,6 +167,16 @@ function findBest(guesses, possible, callback) {
   }
   
   process();
+}
+
+function getAllGray(guess, possible) {
+  let count = 0;
+  
+  for (let target of possible) {
+    if (getPattern(guess, target) === "bbbbb") count++;
+  }
+  
+  return count;
 }
 
 function getEntropy(guess, possible) {
@@ -214,6 +248,14 @@ function processFeedback() {
   }
   
   possible = filterPossible(possible, currGuess, feedback);
+  
+  if (possible.length === 1) {
+    currRound++;
+    currGuess = possible[0];
+    
+    updateDisplay(`Round ${currRound}: try "${currGuess}"<br>(${possible.length} words left)`);
+    return;
+  }
   
   if (possible.length === 0) {
     updateDisplay("No possible words left - check your feedback.");
