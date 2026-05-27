@@ -1,6 +1,6 @@
 // noprotect
 let input, submitBtn, resetBtn, statusDiv, guesses = [], words = [];
-let originWords = [], processing = false, currRound = 1, currGuess = "raise";
+let originWords = [], processing = false, currRound = 1, currGuess = "slate";
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -104,7 +104,7 @@ async function elements() {
 function reset() {
   if (processing) return;
   
-  currGuess = "raise";
+  currGuess = "slate";
   words = [...originWords];
 
   input.value("");
