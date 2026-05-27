@@ -31,14 +31,13 @@ async function elements() {
   input.style("font-family", "sans-serif");
   input.style("text-align", "center");
   input.elt.addEventListener("keydown", e => {
-    if (processing) return;
+    if (processing || possible.length <= 1) return;
     
     let k = e.key.toLowerCase();
     let validKeys = ["g", "y", "b", "backspace", "enter"];
     
     if (k === "r") reset();
     if (k === "escape" || k === "s") {
-      if (possible.length === 1) return;
       words.splice(words.indexOf(currGuess), 1);
       
       guesses.splice(guesses.indexOf(currGuess), 1);
