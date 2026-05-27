@@ -37,7 +37,7 @@ async function elements() {
     let validKeys = ["g", "y", "b", "backspace", "enter"];
     
     if (k === "r") reset();
-    if (k === "escape") {
+    if (k === "escape" || k === "s") {
       if (possible.length === 1) return;
       words.splice(words.indexOf(currGuess), 1);
       
